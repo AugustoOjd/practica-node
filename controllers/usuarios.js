@@ -4,18 +4,30 @@ const bcrypt = require('bcryptjs')
 
 
 
-const usuariosGet = (req = request, res = response) => {
+const usuariosGet = async (req = request, res = response) => {
 
-    const { q, nombre = 'No name', apikey, page = 1, limit } = req.query;
+    // const { q, nombre = 'No name', apikey, page = 1, limit } = req.query;
 
-    res.json({
-        msg: 'get API - controlador',
-        q,
-        nombre,
-        apikey,
-        page, 
-        limit
-    });
+    const { limite = 5, desde = 0 } = req.query
+
+    const query = {state: true}
+
+    // const user = await Usuario.find(query)
+            // .skip(Number(desde))
+            // .limit(Number(limite))
+
+    // const total = await Usuario.countDocuments(query)
+
+    const [total, usuario] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query)
+            .skip(Number(desde))
+            .limit(Number(limite))
+    ])
+
+    return res.status(200).json({
+        total, usuario
+    })
 }
 
 const usuariosPost = async (req, res = response) => {
@@ -29,7 +41,6 @@ const usuariosPost = async (req, res = response) => {
     await usuario.save()
 
     res.status(201).json({
-        msg: 'post API - usuariosPost',
         usuario
     });
 }
@@ -49,7 +60,6 @@ const usuariosPut = async (req, res = response) => {
     const usuario = await Usuario.findByIdAndUpdate(id, resto)
 
     res.json({
-        msg: 'put API - usuariosPut',
         usuario
     });
 }
@@ -60,10 +70,13 @@ const usuariosPatch = (req, res = response) => {
     });
 }
 
-const usuariosDelete = (req, res = response) => {
-    res.json({
-        msg: 'delete API - usuariosDelete'
-    });
+const usuariosDelete = async (req, res = response) => {
+
+    const { id } = req.params
+
+    const user = await Usuario.findByIdAndUpdate(id, { state: false})
+
+    res.status(200).json(user)
 }
 
 
