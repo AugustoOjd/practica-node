@@ -74,10 +74,13 @@ const usuariosDelete = async (req, res = response) => {
 
     const { id } = req.params
 
+    const uid = req.uid
+
     const user = await Usuario.findByIdAndUpdate(id, { state: false})
 
-    res.status(200).json(user)
+    res.status(200).json({user, uid})
 }
+
 
 
 
@@ -87,5 +90,5 @@ module.exports = {
     usuariosPost,
     usuariosPut,
     usuariosPatch,
-    usuariosDelete,
+    usuariosDelete
 }
