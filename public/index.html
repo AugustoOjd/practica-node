@@ -23,6 +23,10 @@
         data-shape="rectangular"
         data-logo_alignment="left">
     </div>
+
+    <button id="google_signout">
+        Sign out
+    </button>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script>
@@ -45,6 +49,11 @@
                     console.log(res)
                 })
                 .catch(console.warn)
+
+                const button = document.getElementById('google_signout')
+                button.onclick = () =>{
+                    console.log( google.accounts.id)
+                }
             
         }
     </script>
