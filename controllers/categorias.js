@@ -1,16 +1,59 @@
-const { response } = require("express");
+const { response, request } = require("express");
 const { Categoria } = require('../models')
 
+
+const obtenerCategorias = async (req, res = response)=>{
+
+    // const allCategory = await Categoria.find()
+    try {
+
+        const { limite = 5, desde = 0 } = req.query
+
+        const query = {state: true}
+    
+        const [total, categorias] = await Promise.all([
+            Categoria.countDocuments(query),
+            Categoria.find(query)
+                .populate('user', 'name')
+                .skip(Number(desde))
+                .limit(Number(limite))
+        ])
+    
+        return res.status(200).json({
+            total,
+            categorias
+        })
+        
+        // return res.status(200).json(allCategory)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({msg: 'Error en solicitar productos'})
+    }
+
+}
+
+const obtenerCategoriaId = async (req = request, res = response) =>{
+    
+
+    try {     
+        const { id } = req.params
+        const categoria = await Categoria.findById( id ).populate('user', 'name')
+        return res.status(200).json(categoria)
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ msg: 'Id no indentificado'})
+    }
+}
 
 const crearCategoria = async (req, res = response) =>{
 
     const name = req.body.name.toUpperCase()
 
-    const categoriaDB = await Categoria.findOne({ name })
+    const categoriaDB = await Categoria.findOne({name})
 
     if(categoriaDB){
         return res.status(400).json({
-            msg: `La categoria ${categoriaDB}, ya existe`
+            msg: `La categoria ${categoriaDB.name}, ya existe`
         })
     }
 
@@ -27,5 +70,7 @@ const crearCategoria = async (req, res = response) =>{
 }
 
 module.exports = {
-    crearCategoria
+    crearCategoria,
+    obtenerCategorias,
+    obtenerCategoriaId
 }
