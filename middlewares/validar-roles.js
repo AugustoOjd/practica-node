@@ -2,7 +2,7 @@ const { response, request } = require("express")
 
 
 
-const esAdminRole = ()=>{
+const esAdminRole = (req = request, res = response, next)=>{
 
 
     if(!req.user){

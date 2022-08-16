@@ -69,8 +69,45 @@ const crearCategoria = async (req, res = response) =>{
 
 }
 
+const actualizarCategoria = async(req = request, res = response)=>{
+
+    try {
+
+        const { id } = req.params
+
+        const { state, user, ...data } = req.body
+        
+        data.name = data.name.toUpperCase()
+        data.user = req.user._id
+    
+        const categoria = await Categoria.findByIdAndUpdate( id, data, { new: true})
+
+        return res.status(201).json(categoria)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({msg: 'Error en actualizar productos'})
+    }
+
+}
+
+const borrarCategoria = async(req = request, res=response)=>{
+    try {
+        const { id } = req.params
+
+        const categoria = await Categoria.findByIdAndUpdate(id, {state: false}, {new: true})
+
+        return res.status(201).json(categoria)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({msg: 'No se pudo eliminar la categoria'})
+    }
+}
+
 module.exports = {
     crearCategoria,
     obtenerCategorias,
-    obtenerCategoriaId
+    obtenerCategoriaId,
+    actualizarCategoria,
+    borrarCategoria 
 }

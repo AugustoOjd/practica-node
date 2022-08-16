@@ -1,9 +1,14 @@
 const { Router } = require('express');
 
 const { check } = require('express-validator');
-const { crearCategoria, obtenerCategorias, obtenerCategoriaId } = require('../controllers/categorias');
+const { crearCategoria, 
+        obtenerCategorias, 
+        obtenerCategoriaId, 
+        actualizarCategoria,
+        borrarCategoria } = require('../controllers/categorias');
+
 const { existeCategoriaId } = require('../helpers/db-validators');
-const { validarJWT, validarCampos } = require('../middlewares');
+const { validarJWT, validarCampos, esAdminRole } = require('../middlewares');
 
 const router = Router()
 
@@ -26,14 +31,22 @@ router.post('/:id', [
 
 
 // actualizar privado
-router.put('/:id', (req, res)=>{
-    res.json({msg: 'put admin'})
-})
+router.put('/:id', [
+    validarJWT,
+    check('name', 'El nombre es obligatorio').notEmpty(),
+    check('id').custom( existeCategoriaId ),
+    validarCampos
+], actualizarCategoria)
+
 
 // Delete solo admin
-router.delete('/:id', (req, res)=>{
-    res.json({msg: 'delete admin'})
-})
+router.delete('/:id', [
+    validarJWT,
+    esAdminRole,
+    check('id', 'No es un id de mongo valido').isMongoId(),
+    check('id').custom( existeCategoriaId ),
+    validarCampos
+], borrarCategoria)
 
 
 module.exports = router

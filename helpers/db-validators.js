@@ -39,10 +39,19 @@ const existeCategoriaId = async ( id ) =>{
     } 
 }
 
+const existeProductoId = async ( id ) =>{
+
+    const existeId = await Producto.findById(id)
+    if(!existeId){
+        throw new Error(`El id: ${id} no existe`)
+    } 
+}
+
 
 module.exports = {
     esRoleValido,
     emailExiste,
     idExisteUser,
-    existeCategoriaId
+    existeCategoriaId,
+    existeProductoId
 }
