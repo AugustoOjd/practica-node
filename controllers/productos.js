@@ -84,11 +84,37 @@ const crearProducto = async (req= request, res = response) =>{
 
 const actualizarProducto = async (req, res=response) =>{
 
+    try {
+
+        const { id } = req.params
+
+        const { state, user, ...data } = req.body
+        
+        data.name = data.name.toUpperCase()
+        data.user = req.user._id
+    
+        const producto = await Producto.findByIdAndUpdate( id, data, { new: true})
+
+        return res.status(201).json(producto)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({msg: 'Error en actualizar productos'})
+    }
 }
 
 
 const borrarProducto = async (req, res = response) =>{
+    try {
+        const { id } = req.params
 
+        const producto = await Producto.findByIdAndUpdate(id, {state: false}, {new: true})
+
+        return res.status(201).json(producto)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({msg: 'No se pudo eliminar la producto'})
+    }
 }
         
 

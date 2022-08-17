@@ -23,7 +23,7 @@ router.get('/:id', [
 ], obtenerCategoriaId)
 
 // Crear privador
-router.post('/:id', [
+router.post('/', [
     validarJWT,
     check('name', 'El no nombre es obligatorio').notEmpty(),
     validarCampos

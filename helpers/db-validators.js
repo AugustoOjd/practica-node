@@ -1,6 +1,7 @@
 const { Categoria } = require('../models')
 const Role = require('../models/role')
 const Usuario = require('../models/usuario')
+const Producto = require('../models/productos')
 
 
 const esRoleValido = async (role = '') => {

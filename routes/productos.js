@@ -35,7 +35,7 @@ router.put('/:id', [
 router.post('/', [
     validarJWT,
     check('name', 'El no nombre es obligatorio').notEmpty(),
-    check('category', 'No es un id de mongo').isMongoId(),
+    // check('category', 'No es un id de mongo').isMongoId(),
     check('category').custom(existeCategoriaId),
     validarCampos
 ], crearProducto)
