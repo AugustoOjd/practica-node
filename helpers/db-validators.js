@@ -49,10 +49,25 @@ const existeProductoId = async ( id ) =>{
 }
 
 
+// vildar colecciones
+
+const coleccionesPermitidas = (coleccion = '', colecciones = [])=>{
+
+    const incluida = colecciones.includes( coleccion )
+
+    if(!incluida){
+        throw new Error(`La coleccion ${coleccion} no es permitida, solo son permitidas: ${colecciones}`)
+    }
+
+    return true;
+}
+
+
 module.exports = {
     esRoleValido,
     emailExiste,
     idExisteUser,
     existeCategoriaId,
-    existeProductoId
+    existeProductoId,
+    coleccionesPermitidas
 }
