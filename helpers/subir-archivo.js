@@ -26,7 +26,7 @@ const subirArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg'], carpet
                 return reject(err)
             }
         
-            resolve( uploadPath )
+            resolve( nombreTempId )
         });
 
     })

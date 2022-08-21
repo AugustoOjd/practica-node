@@ -7,7 +7,8 @@ const ProductoSchema = new Schema({
     description:{ type: String},
     stock:      { type: Boolean, default: true},
     category:   { type: Schema.Types.ObjectId, ref: 'Categoria', required: true},
-    user:       { type: Schema.Types.ObjectId, ref: 'Usuario', required: true }
+    user:       { type: Schema.Types.ObjectId, ref: 'Usuario', required: true },
+    img:        { type: String }
 })
 
 
