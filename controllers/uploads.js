@@ -22,58 +22,58 @@ const cargarArchivos = async (req = request, res = response)=>{
 
 }
 
-const actImagen = async (req, res = response) =>{
+// const actImagen = async (req, res = response) =>{
 
-    const { coleccion, id } = req.params
+//     const { coleccion, id } = req.params
 
-    let modelo
+//     let modelo
 
-    switch (coleccion) {
-        case 'usuarios':
-            modelo = await Usuario.findById( id )
+//     switch (coleccion) {
+//         case 'usuarios':
+//             modelo = await Usuario.findById( id )
 
-            if(!modelo){
-                return res.status(400).json({msg: `No existe un usuario con id: ${id}`})
-            }
+//             if(!modelo){
+//                 return res.status(400).json({msg: `No existe un usuario con id: ${id}`})
+//             }
         
-        break;
+//         break;
 
-        case 'productos':
-            modelo = await Producto.findById( id )
+//         case 'productos':
+//             modelo = await Producto.findById( id )
 
-            if(!modelo){
-                return res.status(400).json({msg: `No existe un producto con id: ${id}`})
-            }
-        break;
+//             if(!modelo){
+//                 return res.status(400).json({msg: `No existe un producto con id: ${id}`})
+//             }
+//         break;
 
-        default:
-            res.status(500).json({ msg: 'Falto validar esto'})
-    }
+//         default:
+//             res.status(500).json({ msg: 'Falto validar esto'})
+//     }
 
-    // Limpiar imagen previa
+//     // Limpiar imagen previa
 
-    try {
-        if(modelo.img){
+//     try {
+//         if(modelo.img){
 
-            const pathImage = path.join(__dirname, '../uploads', coleccion, modelo.img)
+//             const pathImage = path.join(__dirname, '../uploads', coleccion, modelo.img)
 
-            if(fs.existsSync( pathImage )){
-                fs.unlinkSync( pathImage )
-            }
-        }
+//             if(fs.existsSync( pathImage )){
+//                 fs.unlinkSync( pathImage )
+//             }
+//         }
 
 
-    } catch (error) {
-        console.log(error)
-    }
+//     } catch (error) {
+//         console.log(error)
+//     }
 
-    const nombre = await subirArchivo(req.files, undefined, coleccion)
-    modelo.img = nombre
+//     const nombre = await subirArchivo(req.files, undefined, coleccion)
+//     modelo.img = nombre
 
-    await modelo.save()
+//     await modelo.save()
 
-    return res.status(200).json(modelo)
-}
+//     return res.status(200).json(modelo)
+// }
 
 const actImagenCloudinary = async (req, res = response) =>{
 
@@ -107,7 +107,11 @@ const actImagenCloudinary = async (req, res = response) =>{
 
     try {
         if(modelo.img){
+            const nombreArr     = modelo.img.split('/')
+            const nombre        = nombreArr[nombreArr.length - 1]
+            const [public_id]   = nombre.split('.')
 
+            cloudinary.uploader.destroy(public_id)
         }
 
 
@@ -182,7 +186,7 @@ const mostrarImage = async ( req, res = response)=>{
 
 module.exports = {
     cargarArchivos,
-    actImagen,
+    // actImagen,
     mostrarImage,
     actImagenCloudinary
 }
